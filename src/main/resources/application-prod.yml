@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/testclevertec
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
