@@ -8,7 +8,7 @@ message CommentDto {
   string date = 2;
   string text = 3;
   string username = 4;
-
+   int64 id_news = 5;
 }
 
 message NewsDto {
@@ -17,9 +17,9 @@ message NewsDto {
   string date = 2;
   string title = 3;
   string text = 4;
-//  ListOfComment listComment = 5;
+  newsListComment comments= 5;
 }
-//
-//message ListOfComment {
-//  repeated CommentDto comments=1;
-//}
+
+message newsListComment {
+  repeated CommentDto comments=1;
+}

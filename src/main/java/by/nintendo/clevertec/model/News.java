@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "news")
-public class News extends BaseEntity{
+public class News extends BaseEntity {
     @Column(name = "title")
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_news")
     private List<Comment> comments;
 

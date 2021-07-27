@@ -11,22 +11,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/comments")
 public class CommentController {
-@Autowired
-@Qualifier("commentImplService")
-private CommentService commentService;
+    @Autowired
+    @Qualifier("commentImplService")
+    private CommentService commentService;
 
     @PostMapping
-    public void createComments(@RequestBody  Comment comment) {
-    commentService.create(comment);
+    public void createOrUpdateComments(@RequestBody Comment comment) {
+        commentService.createOrUpdate(comment);
     }
-
 
 
     @DeleteMapping(value = "/{id}")
     public void deleteCommentById(@PathVariable Long id) {
-commentService.deleteById(id);
+        commentService.deleteById(id);
     }
-
 
 
 }

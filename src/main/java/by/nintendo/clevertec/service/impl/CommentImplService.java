@@ -15,14 +15,9 @@ public class CommentImplService implements CommentService {
     private CommentRepository commentRepository;
 
     @Override
-    public void create(Comment comment) {
+    public void createOrUpdate(Comment comment) {
         comment.setDate(LocalDate.now());
         commentRepository.save(comment);
-    }
-
-    @Override
-    public void update(Comment comment) {
-
     }
 
     @Override

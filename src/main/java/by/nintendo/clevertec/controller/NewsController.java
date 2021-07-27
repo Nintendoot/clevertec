@@ -15,30 +15,30 @@ import org.springframework.web.bind.annotation.*;
 public class NewsController {
     @Autowired
     @Qualifier("newsImplService")
-  private NewsService newsService;
+    private NewsService newsService;
+
     @PostMapping
-    public ResponseEntity<Object> createNews(@RequestBody News newsDto){
+    public ResponseEntity<Object> createOrUpdateNews(@RequestBody News newsDto) {
 
 
-
-        return new ResponseEntity<>(newsService.create(newsDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(newsService.createOrUpdate(newsDto), HttpStatus.CREATED);
 
     }
+
     @DeleteMapping(value = "/{id}")
     public void deleteNewsById(@PathVariable Long id) {
         newsService.deleteById(id);
     }
 
 
-    //Not working
     @GetMapping(value = "/all")
-    public ResponseEntity<Object> getAllNews(){
+    public ResponseEntity<Object> getAllNews() {
 
         return new ResponseEntity<>(newsService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> getNewsById(@PathVariable Long id){
+    public ResponseEntity<Object> getNewsById(@PathVariable Long id) {
 
         return new ResponseEntity<>(newsService.getById(id), HttpStatus.OK);
     }

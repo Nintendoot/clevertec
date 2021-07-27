@@ -4,50 +4,59 @@ import by.nintendo.clevertec.model.News;
 import by.nintendo.clevertec.dto.NewsDto;
 import by.nintendo.clevertec.repository.NewsRepository;
 import by.nintendo.clevertec.service.NewsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import by.nintendo.clevertec.util.NewsBuilder;
+import by.nintendo.clevertec.util.converter.ProtoConverter;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NewsImplService implements NewsService {
-    @Autowired
-    private NewsRepository newsRepository;
+
+    private final ProtoConverter protoConverter;
+    private final NewsBuilder newsBuilder;
+    private final NewsRepository newsRepository;
+
+    public NewsImplService(NewsBuilder newsBuilder, NewsRepository newsRepository, ProtoConverter protoConverter) {
+        this.newsBuilder = newsBuilder;
+        this.newsRepository = newsRepository;
+        this.protoConverter = protoConverter;
+    }
+
     @Override
-    public NewsDto create(News news) {
+    public NewsDto createOrUpdate(News news) {
         news.setDate(LocalDate.now());
         newsRepository.save(news);
-        return NewsDto.newBuilder().setDate(news.getDate().toString()).setId(news.getId()).setText(news.getText()).setTitle(news.getTitle()).build();
+        return newsBuilder.toDtoNews(news);
     }
 
     @Override
-    public void update(News news) {
-
+    public String getAll() {
+        List<News> all = newsRepository.findAll();
+        List<NewsDto> collect = all.stream().map(x -> newsBuilder.toDtoNews(x)).collect(Collectors.toList());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (NewsDto newsDto : collect) {
+            stringBuilder.append(protoConverter.objectToJson(newsDto));
+        }
+        return stringBuilder.toString();
     }
 
     @Override
-    public List<NewsDto> getAll() {
-        List<NewsDto> list=new ArrayList<>();
-for(News news:newsRepository.findAll()){
-    NewsDto build = NewsDto.newBuilder().setDate(news.getDate().toString()).setId(news.getId()).setText(news.getText()).setTitle(news.getTitle()).build();
-
-list.add(build);
-}
-        return list;
-    }
-
-    @Override
-    public NewsDto getById(Long id) {
-        News news = newsRepository.getById(id);
-        return NewsDto.newBuilder().setDate(news.getDate().toString()).setId(news.getId()).setText(news.getText()).setTitle(news.getTitle()).build();
-
-
+    public String getById(Long id) {
+        News byId = newsRepository.getById(id);
+        try {
+            return JsonFormat.printer().print(newsBuilder.toDtoNews(byId));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-newsRepository.deleteById(id);
+        newsRepository.deleteById(id);
     }
 }

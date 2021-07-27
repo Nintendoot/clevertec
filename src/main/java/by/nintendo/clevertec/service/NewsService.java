@@ -3,15 +3,12 @@ package by.nintendo.clevertec.service;
 import by.nintendo.clevertec.model.News;
 import by.nintendo.clevertec.dto.NewsDto;
 
-import java.util.List;
-
 public interface NewsService {
-    NewsDto create(News news);
-    void update(News news);
+    NewsDto createOrUpdate(News news);
 
-    List<NewsDto> getAll();
+    String getAll();
 
-    NewsDto  getById(Long id);
+    String  getById(Long id);
 
     void deleteById(Long id);
 }

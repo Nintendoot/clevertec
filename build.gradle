@@ -36,6 +36,7 @@ protobuf {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'io.grpc', name: 'grpc-all', version: '1.39.0'
     // https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.17.3'
     compileOnly 'org.projectlombok:lombok'
