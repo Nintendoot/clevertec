@@ -1,16 +1,16 @@
 package by.nintendo.clevertec.service;
 
 import by.nintendo.clevertec.model.News;
-import by.nintendo.clevertec.dto.NewsDto;
+import org.springframework.data.domain.Pageable;
 
 public interface NewsService {
     void create(News news);
 
     void update(Long id,News news);
 
-    String getAll();
+    String getAll(Pageable pageable);
 
-    String  getById(Long id);
+    String  getById(Long id,Pageable pageable);
 
     void deleteById(Long id);
 }

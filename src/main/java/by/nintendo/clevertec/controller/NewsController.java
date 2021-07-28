@@ -1,11 +1,13 @@
 package by.nintendo.clevertec.controller;
 
-import by.nintendo.clevertec.constant.Status;
+import by.nintendo.clevertec.model.response.Status;
 import by.nintendo.clevertec.model.News;
 import by.nintendo.clevertec.service.NewsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,9 +20,11 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path = "/news")
 public class NewsController {
-    @Autowired
-    @Qualifier("newsImplService")
-    private NewsService newsService;
+    private final NewsService newsService;
+
+    public NewsController(@Qualifier("newsImplService") NewsService newsService) {
+        this.newsService = newsService;
+    }
 
     @PostMapping
     public ResponseEntity<?> createNews(@Valid @RequestBody News news, BindingResult bindingResult) {
@@ -67,13 +71,12 @@ public class NewsController {
         return new ResponseEntity<>(Status.DELETE,HttpStatus.OK);
     }
 
-
     @GetMapping(value = "/all")
-    public ResponseEntity<Object> getAllNews() {
-        return new ResponseEntity<>(newsService.getAll(), HttpStatus.OK);
+    public ResponseEntity<?> getAllNews(@PageableDefault(size = 5,direction = Sort.Direction.DESC)Pageable pageable) {
+        return new ResponseEntity<>(newsService.getAll(pageable), HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> getNewsById(@PathVariable Long id) {
-        return new ResponseEntity<>(newsService.getById(id), HttpStatus.OK);
+    public ResponseEntity<Object> getNewsById(@PathVariable Long id,@PageableDefault(size = 10,direction = Sort.Direction.DESC)Pageable pageable) {
+        return new ResponseEntity<>(newsService.getById(id,pageable), HttpStatus.OK);
     }
 }

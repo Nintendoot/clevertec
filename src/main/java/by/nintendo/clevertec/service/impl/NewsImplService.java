@@ -1,6 +1,7 @@
 package by.nintendo.clevertec.service.impl;
 
 import by.nintendo.clevertec.exception.NewsNotFoundException;
+import by.nintendo.clevertec.model.Comment;
 import by.nintendo.clevertec.model.News;
 import by.nintendo.clevertec.dto.NewsDto;
 import by.nintendo.clevertec.repository.NewsRepository;
@@ -8,6 +9,8 @@ import by.nintendo.clevertec.service.NewsService;
 import by.nintendo.clevertec.util.NewsBuilder;
 import by.nintendo.clevertec.util.converter.ProtoConverter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -52,21 +55,27 @@ public class NewsImplService implements NewsService {
     }
 
     @Override
-    public String getAll() {
-        List<News> all = newsRepository.findAll();
+    public String getAll(Pageable pageable) {
+        Page<News> all = newsRepository.findAll(pageable);
         List<NewsDto> collect = all.stream().map(newsBuilder::toDtoNews).collect(Collectors.toList());
         StringBuilder stringBuilder = new StringBuilder();
         for (NewsDto newsDto : collect) {
             stringBuilder.append(protoConverter.objectToJson(newsDto));
         }
+        log.info("In getAll - pageNumber: {} pageSize: {}", pageable.getPageNumber(), pageable.getPageSize());
         return stringBuilder.toString();
     }
 
     @Override
-    public String getById(Long id) throws RuntimeException {
+    public String getById(Long id, Pageable pageable) throws RuntimeException {
         Optional<News> news = newsRepository.findById(id);
         if (news.isPresent()) {
-            log.info("In getById - id:{} user found: {}",id, news);
+            log.info("In getById - id:{} user found: {}", id, news);
+            List<Comment> collect = news.get().getComments().stream()
+                    .skip(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .collect(Collectors.toList());
+            news.get().setComments(collect);
             return protoConverter.objectToJson(newsBuilder.toDtoNews(news.get()));
         } else {
             throw new NewsNotFoundException(String.format("News with id: %s not found.", id));

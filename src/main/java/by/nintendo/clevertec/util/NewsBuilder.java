@@ -5,7 +5,6 @@ import by.nintendo.clevertec.dto.NewsDto;
 import by.nintendo.clevertec.dto.newsListComment;
 import by.nintendo.clevertec.model.Comment;
 import by.nintendo.clevertec.model.News;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,8 +13,11 @@ import java.util.stream.Collectors;
 @Component
 public class NewsBuilder {
 
-    @Autowired
-    private CommentBuilder commentBuilder;
+    private final CommentBuilder commentBuilder;
+
+    public NewsBuilder(CommentBuilder commentBuilder) {
+        this.commentBuilder = commentBuilder;
+    }
 
     public NewsDto toDtoNews(News news) {
         NewsDto newsDto = NewsDto.newBuilder()
@@ -29,6 +31,8 @@ public class NewsBuilder {
     }
 
     public List<CommentDto> newsListComment(List<Comment> list) {
-        return list.stream().map(x -> commentBuilder.toCommentDto(x)).collect(Collectors.toList());
+        return list.stream()
+                .map(x -> commentBuilder.toCommentDto(x))
+                .collect(Collectors.toList());
     }
 }

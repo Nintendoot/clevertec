@@ -1,4 +1,4 @@
-package by.nintendo.clevertec.constant;
+package by.nintendo.clevertec.model.response;
 
 public enum Status {
     NOT_CREATED("NOT_CREATED"),

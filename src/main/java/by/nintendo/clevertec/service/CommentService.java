@@ -1,15 +1,17 @@
 package by.nintendo.clevertec.service;
 
 import by.nintendo.clevertec.model.Comment;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface CommentService {
-    void createOrUpdate(Comment comment);
+    void create(Comment comment);
 
-    List<Comment> getAll();
+    void update(Long idComment,Comment comment);
 
-    Comment getById(Long id);
+    String getAll(Pageable pageable);
+
+    String  getById(Long id);
 
     void deleteById(Long id);
 }
