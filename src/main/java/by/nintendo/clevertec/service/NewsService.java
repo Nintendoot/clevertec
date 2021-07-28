@@ -4,7 +4,9 @@ import by.nintendo.clevertec.model.News;
 import by.nintendo.clevertec.dto.NewsDto;
 
 public interface NewsService {
-    NewsDto createOrUpdate(News news);
+    void create(News news);
+
+    void update(Long id,News news);
 
     String getAll();
 
