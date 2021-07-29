@@ -14,4 +14,6 @@ public interface CommentService {
     String  getById(Long id);
 
     void deleteById(Long id);
+
+    String search(String keyword);
 }

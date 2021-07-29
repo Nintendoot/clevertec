@@ -20,6 +20,12 @@ message NewsDto {
   newsListComment comments= 5;
 }
 
+message NewsDtoTitle {
+  int64 id = 1;
+  string date = 2;
+  string title = 3;
+}
+
 message newsListComment {
   repeated CommentDto comments=1;
 }

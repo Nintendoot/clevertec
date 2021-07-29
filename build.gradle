@@ -41,6 +41,10 @@ dependencies {
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.17.3'
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.3'
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-search
+    implementation group: 'org.hibernate', name: 'hibernate-search', version: '5.11.8.Final', ext: 'pom'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.5.3'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'

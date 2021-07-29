@@ -14,6 +14,4 @@ public class ProtoConverter {
             throw new RuntimeException("Error convert Object to JSON");
         }
     }
-
-
 }

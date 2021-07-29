@@ -1,5 +1,6 @@
 package by.nintendo.clevertec.service.impl;
 
+import by.nintendo.clevertec.dto.NewsDtoTitle;
 import by.nintendo.clevertec.exception.NewsNotFoundException;
 import by.nintendo.clevertec.model.Comment;
 import by.nintendo.clevertec.model.News;
@@ -37,7 +38,6 @@ public class NewsImplService implements NewsService {
     public void create(News news) {
         news.setDate(LocalDate.now());
         newsRepository.save(news);
-        log.info("In create - news: {} ", news);
     }
 
     @Override
@@ -48,7 +48,6 @@ public class NewsImplService implements NewsService {
             byId.get().setTitle(news.getTitle());
             byId.get().setText(news.getText());
             newsRepository.save(byId.get());
-            log.info("In update - news: {} update by id: {}", byId, id);
         } else {
             throw new NewsNotFoundException(String.format("News with id: %s not found.", id));
         }
@@ -62,7 +61,6 @@ public class NewsImplService implements NewsService {
         for (NewsDto newsDto : collect) {
             stringBuilder.append(protoConverter.objectToJson(newsDto));
         }
-        log.info("In getAll - pageNumber: {} pageSize: {}", pageable.getPageNumber(), pageable.getPageSize());
         return stringBuilder.toString();
     }
 
@@ -70,7 +68,6 @@ public class NewsImplService implements NewsService {
     public String getById(Long id, Pageable pageable) throws RuntimeException {
         Optional<News> news = newsRepository.findById(id);
         if (news.isPresent()) {
-            log.info("In getById - id:{} user found: {}", id, news);
             List<Comment> collect = news.get().getComments().stream()
                     .skip(pageable.getOffset())
                     .limit(pageable.getPageSize())
@@ -87,9 +84,34 @@ public class NewsImplService implements NewsService {
         Optional<News> news = newsRepository.findById(id);
         if (news.isPresent()) {
             newsRepository.deleteById(id);
-            log.info("In deleteById - id: {}", id);
         } else {
             throw new NewsNotFoundException(String.format("News with id: %s not found.", id));
         }
+    }
+
+    @Override
+    public String search(String keyword) {
+       List<News> all = newsRepository.findAll(keyword);
+        if(!all.isEmpty()){
+            List<NewsDto> list = newsBuilder.toListNewsDto(all);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (NewsDto newsDto : list) {
+                stringBuilder.append(protoConverter.objectToJson(newsDto));
+            }
+            return stringBuilder.toString();
+        }else {
+            return "По вашим параметрам ничего не найдено.";
+        }
+    }
+
+    @Override
+    public String getAllByTitle(Pageable pageable) {
+        Page<News> all = newsRepository.findAll(pageable);
+        List<NewsDtoTitle> newsDtoTitles = newsBuilder.toListNewsDtoTitle(all);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (NewsDtoTitle n : newsDtoTitles) {
+            stringBuilder.append(protoConverter.objectToJson(n));
+        }
+        return stringBuilder.toString();
     }
 }
