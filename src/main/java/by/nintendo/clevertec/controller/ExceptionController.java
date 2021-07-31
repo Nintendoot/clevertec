@@ -5,6 +5,10 @@ import by.nintendo.clevertec.exception.NewsNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Controller for intercepting exceptions
+ */
+
 @RestControllerAdvice
 public class ExceptionController {
     @ExceptionHandler(NewsNotFoundException.class)

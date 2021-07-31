@@ -20,10 +20,11 @@ import javax.validation.constraints.Pattern;
 @Table(name = "comment")
 public class Comment extends BaseEntity {
     @NotEmpty(message = "The fieldname is empty.")
-    @Pattern(regexp = "[A-Za-z]{4,10}", message = "name : должен быть больше 4 и меньше 10 и содержать только латинские символы.")
+    @Pattern(regexp = "[A-Za-z]{4,10}")
     @Column(name = "username")
     private String username;
     @NotNull
     @Column(name = "id_news")
     private Long id_news;
+
 }

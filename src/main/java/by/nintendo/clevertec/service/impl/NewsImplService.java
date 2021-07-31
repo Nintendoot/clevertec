@@ -9,7 +9,6 @@ import by.nintendo.clevertec.repository.NewsRepository;
 import by.nintendo.clevertec.service.NewsService;
 import by.nintendo.clevertec.util.NewsBuilder;
 import by.nintendo.clevertec.util.converter.ProtoConverter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+/**
+ * A service that processes requests related to news
+ */
+
 @Service
 public class NewsImplService implements NewsService {
 
@@ -33,12 +35,25 @@ public class NewsImplService implements NewsService {
         this.protoConverter = protoConverter;
     }
 
+    /**
+     * Creating a news
+     *
+     * @param news object
+     */
 
     @Override
     public void create(News news) {
         news.setDate(LocalDate.now());
         newsRepository.save(news);
     }
+
+
+    /**
+     * Updating a news
+     *
+     * @param id   news
+     * @param news object
+     */
 
     @Override
     public void update(Long id, News news) throws RuntimeException {
@@ -53,6 +68,14 @@ public class NewsImplService implements NewsService {
         }
     }
 
+
+    /**
+     * Allows you to get a list of news with a paginated view
+     *
+     * @param pageable from the request
+     * @return list of news with pagination
+     */
+
     @Override
     public String getAll(Pageable pageable) {
         Page<News> all = newsRepository.findAll(pageable);
@@ -63,6 +86,15 @@ public class NewsImplService implements NewsService {
         }
         return stringBuilder.toString();
     }
+
+
+    /**
+     * Allows you to get news by id with a paginated view
+     *
+     * @param id       news
+     * @param pageable from the request
+     * @return json  news with comment pagination
+     */
 
     @Override
     public String getById(Long id, Pageable pageable) throws RuntimeException {
@@ -79,6 +111,13 @@ public class NewsImplService implements NewsService {
         }
     }
 
+
+    /**
+     * Deleted News
+     *
+     * @param id news
+     */
+
     @Override
     public void deleteById(Long id) {
         Optional<News> news = newsRepository.findById(id);
@@ -89,20 +128,36 @@ public class NewsImplService implements NewsService {
         }
     }
 
+
+    /**
+     * Full-text search for various news parameters
+     *
+     * @param keyword from the request
+     * @return json found news
+     */
+
     @Override
     public String search(String keyword) {
-       List<News> all = newsRepository.findAll(keyword);
-        if(!all.isEmpty()){
+        List<News> all = newsRepository.findAll(keyword);
+        if (!all.isEmpty()) {
             List<NewsDto> list = newsBuilder.toListNewsDto(all);
             StringBuilder stringBuilder = new StringBuilder();
             for (NewsDto newsDto : list) {
                 stringBuilder.append(protoConverter.objectToJson(newsDto));
             }
             return stringBuilder.toString();
-        }else {
-            return "По вашим параметрам ничего не найдено.";
+        } else {
+            return "Nothing was found for your parameters.";
         }
     }
+
+
+    /**
+     * Allows you to get a list of news with a paginated view
+     *
+     * @param pageable from the request
+     * @return json of news with pagination
+     */
 
     @Override
     public String getAllByTitle(Pageable pageable) {

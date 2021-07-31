@@ -1,5 +1,7 @@
 package by.nintendo.clevertec.model.response;
-
+/**
+ * Status Response
+ */
 public enum Status {
     NOT_CREATED("NOT_CREATED"),
     CREATED("CREATED"),
